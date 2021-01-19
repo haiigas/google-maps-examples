@@ -6,3 +6,4 @@
 - Get Distance
 - Get Coordinate
 - Get Maps Location
+- Get Address Geocoding
