@@ -1,4 +1,3 @@
-### Google Maps Collection
 - Track Live Location
 - Get Maps Direction
 - Get Distance
