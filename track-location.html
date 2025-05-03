@@ -1,103 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Teknowebapp - Maps Get Coordinate</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-	<meta charset="utf-8">
-	<link href="assets/css/bootstrap.css" rel="stylesheet">
-	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>Map Coordinate Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    
+    <!-- Styles -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+
     <style>
-		body {
-			padding-top: 50px;
-		}
+        body {
+            padding-top: 50px;
+        }
 
-        #directions-panel {
-			height: 500px;
-			float: right;
-			width: 400px;
-			overflow: auto;
-		}
+        #map {
+            height: 500px;
+            width: 100%;
+        }
 
-		#control {
-			background: #fff;
-			padding: 5px;
-			font-size: 14px;
-			font-family: Arial;
-			border: 1px solid #ccc;
-			box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
-			display: none;
-		}
+        #map img {
+            max-width: none;
+        }
 
+        #map label {
+            display: inline;
+        }
 
-		#map-canvas {
-			height: 500px;
-			margin: 0;
-			width: 800px;
-
-		}
-
-		#map-canvas img {
-			max-width: none;
-		}
-
-		#map-canvas label {
-			display: inline;
-		}
-	</style>
+        .coordinate-info {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-		<div class="form-group">
-			<label>Cek Kordinat</label>
-            <button class="btn btn-primary" onclick="getLocation()">Cek</button>
-		</div>
-        <p style="margin-top:10px" id="koordinat"></p>
-		<div id="map-canvas" style="width:100%"></div>
-	</div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1UhV7s_4c-E3p33HyK_P-N7uEs8qqfpg&callback=initMap"></script>
+        <div class="form-group">
+            <label>Check Coordinates</label>
+            <button class="btn btn-primary" onclick="getLocation()">Check</button>
+        </div>
+        <p id="coordinateInfo" class="coordinate-info"></p>
+        <div id="map"></div>
+    </div>
+
+    <!-- Google Maps Script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&callback=initMap" async defer></script>
+
     <script>
-        var view = document.getElementById("koordinat");
+        const coordinateInfo = document.getElementById("coordinateInfo");
+
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                view.innerHTML = "Yah browsernya ngga support Geolocation bro!";
+                coordinateInfo.innerHTML = "Sorry, your browser does not support geolocation.";
             }
         }
-        
+
         function showPosition(position) {
-            lat = position.coords.latitude;
-            lon = position.coords.longitude;
-            latlon = new google.maps.LatLng(lat, lon)
-            mapcanvas = document.getElementById('map-canvas')
-        
-            var myOptions = {
-                center:latlon,
-                zoom:14,
-                mapTypeId:google.maps.MapTypeId.ROADMAP
-            }
-            
-            var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
-            var marker = new google.maps.Marker({
-                position:latlon,
-                map:map,
-                title:"You are here!"
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const userLatLng = new google.maps.LatLng(latitude, longitude);
+
+            coordinateInfo.innerHTML = `Latitude: ${latitude}, Longitude: ${longitude}`;
+
+            const mapOptions = {
+                center: userLatLng,
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+            new google.maps.Marker({
+                position: userLatLng,
+                map: map,
+                title: "You are here!"
             });
         }
-        
+
         function showError(error) {
-            switch(error.code) {
+            switch (error.code) {
                 case error.PERMISSION_DENIED:
-                    view.innerHTML = "Yah, mau deteksi lokasi tapi ga boleh :("
+                    coordinateInfo.innerHTML = "Permission to access location was denied.";
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    view.innerHTML = "Yah, Info lokasimu nggak bisa ditemukan nih"
+                    coordinateInfo.innerHTML = "Location information is unavailable.";
                     break;
                 case error.TIMEOUT:
-                    view.innerHTML = "Requestnya timeout bro"
+                    coordinateInfo.innerHTML = "The request to get your location timed out.";
                     break;
                 case error.UNKNOWN_ERROR:
-                    view.innerHTML = "An unknown error occurred."
+                    coordinateInfo.innerHTML = "An unknown error occurred.";
                     break;
             }
         }
