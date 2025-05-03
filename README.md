@@ -4,6 +4,7 @@
 This repository contains a set of Google Maps examples, demonstrating various features such as live location tracking, directions, geocoding, distance calculation, and coordinate tracking. These examples use HTML and PHP with Google Maps API to provide interactive and useful map functionalities.
 
 ## Features
+
 - **Live Location Tracking**: Track and display the user's current location on the map.
 - **Directions**: Calculate and display directions between two locations.
 - **Geocoding**: Convert addresses to geographic coordinates and vice versa.
@@ -11,6 +12,7 @@ This repository contains a set of Google Maps examples, demonstrating various fe
 - **Coordinate Tracking**: Display the coordinates of a selected point on the map.
 
 ## File List
+
 - `live-location.html`: Demonstrates how to display live user location on the map.
 - `maps-direction.html`: Example of showing directions between two locations.
 - `maps-distance.php`: Calculate the distance between two points using PHP.
@@ -19,6 +21,7 @@ This repository contains a set of Google Maps examples, demonstrating various fe
 - `track-location.html`: Example of live location tracking with real-time updates.
 
 ## Requirements
+
 - A Google Maps API key to access Google Maps services.
 - Basic knowledge of HTML and JavaScript.
 
