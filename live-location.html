@@ -1,18 +1,101 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>Teknowebapp - Maps Track Live Location</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="assets/css/styles.css">
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Live Location Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    .map-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .map-view {
+      flex: 1;
+    }
+
+    .status-info {
+      padding: 10px;
+      text-align: center;
+      background-color: #f8f9fa;
+      font-weight: bold;
+    }
+
+    .status-info.error {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-	<main class="container">
-		<div id="map" class="map"></div>
-		<p id="info" class="info"></p>
-	</main>
-	<script src="assets/js/script.js"></script>
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1UhV7s_4c-E3p33HyK_P-N7uEs8qqfpg&callback=init"></script>
+  <main class="map-container">
+    <div id="map" class="map-view"></div>
+    <p id="statusInfo" class="status-info">Waiting for location...</p>
+  </main>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1UhV7s_4c-E3p33HyK_P-N7uEs8qqfpg&callback=init"></script>
+
+  <script>
+    const createMap = ({ lat, lng }) => {
+      return new google.maps.Map(document.getElementById('map'), {
+        center: { lat, lng },
+        zoom: 15
+      });
+    };
+
+    const createMarker = ({ map, position }) => {
+      return new google.maps.Marker({ map, position });
+    };
+
+    const trackUserLocation = ({ onSuccess, onError = () => {} }) => {
+      if (!navigator.geolocation) {
+        return onError(new Error('Geolocation is not supported by this browser.'));
+      }
+
+      return navigator.geolocation.watchPosition(onSuccess, onError, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      });
+    };
+
+    const getErrorMessage = (code) => {
+      switch (code) {
+        case 1: return 'Location access denied.';
+        case 2: return 'Location unavailable.';
+        case 3: return 'Location request timed out.';
+        default: return 'An unknown error occurred.';
+      }
+    };
+
+    function init() {
+      const defaultPosition = { lat: -6.55694, lng: 107.44333 };
+      const map = createMap(defaultPosition);
+      const marker = createMarker({ map, position: defaultPosition });
+      const statusInfo = document.getElementById('statusInfo');
+
+      trackUserLocation({
+        onSuccess: ({ coords: { latitude, longitude } }) => {
+          const newPosition = { lat: latitude, lng: longitude };
+          marker.setPosition(newPosition);
+          map.panTo(newPosition);
+          statusInfo.textContent = `Latitude: ${latitude.toFixed(5)} | Longitude: ${longitude.toFixed(5)}`;
+          statusInfo.classList.remove('error');
+        },
+        onError: (err) => {
+          statusInfo.textContent = `Error: ${err.message || getErrorMessage(err.code)}`;
+          statusInfo.classList.add('error');
+        }
+      });
+    }
+  </script>
 </body>
 </html>
