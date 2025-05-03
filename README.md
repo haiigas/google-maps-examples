@@ -1,4 +1,3 @@
-
 # Google Maps Collection
 
 This repository contains a set of Google Maps examples, demonstrating various features such as live location tracking, directions, geocoding, distance calculation, and coordinate tracking. These examples use HTML and PHP with Google Maps API to provide interactive and useful map functionalities.
