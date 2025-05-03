@@ -24,17 +24,9 @@ This repository contains a set of Google Maps examples, demonstrating various fe
 
 ## Installation
 
-1. **Get a Google Maps API Key**:
-   - Visit the [Google Cloud Console](https://console.cloud.google.com/).
-   - Create a project and enable the Google Maps JavaScript API.
-   - Obtain an API key and add it to the script in your HTML file.
-
-2. **Include Google Maps Script**:
-   Add the following script tag to the `<head>` of your HTML file:
-
-   ```html
-   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
-   ```
+- Visit the [Google Cloud Console](https://console.cloud.google.com/).
+- Create a project and enable the Google Maps JavaScript API.
+- Obtain an API key and add it to the script in your HTML file.
 
 ## Customization
 
