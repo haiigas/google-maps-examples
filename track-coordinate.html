@@ -1,51 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Teknowebapp - Get Coordinate</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-	<meta charset="utf-8">
-	<link href="assets/css/bootstrap.css" rel="stylesheet">
-	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>Get Coordinates - Location Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
     <style>
-		body {
-			padding-top: 50px;
-		}
-	</style>
+        body {
+            padding-top: 50px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-		<div class="form-group">
-			<label>Cek Kordinat</label>
-            <button class="btn btn-primary" onclick="getLocation()">Cek</button>
-		</div>
-        <p style="margin-top:10px" id="koordinat"></p>
-	</div>
+        <div class="form-group">
+            <label>Check Coordinates</label>
+            <button class="btn btn-primary" onclick="getLocation()">Check</button>
+        </div>
+        <p style="margin-top:10px" id="coordinateDisplay"></p>
+    </div>
+
     <script>
-        var view = document.getElementById("koordinat");
+        const display = document.getElementById("coordinateDisplay");
+
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
             } else {
-                view.innerHTML = "Yah browsernya ngga support Geolocation bro!";
+                display.textContent = "Sorry, your browser does not support geolocation.";
             }
         }
+
         function showPosition(position) {
-            view.innerHTML = "Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude; 
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            display.textContent = `Latitude: ${latitude}, Longitude: ${longitude}`;
         }
-        
+
         function showError(error) {
-            switch(error.code) {
+            switch (error.code) {
                 case error.PERMISSION_DENIED:
-                    view.innerHTML = "Yah, mau deteksi lokasi tapi ga boleh :("
+                    display.textContent = "Permission to access location was denied.";
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    view.innerHTML = "Yah, Info lokasimu nggak bisa ditemukan nih"
+                    display.textContent = "Location information is unavailable.";
                     break;
                 case error.TIMEOUT:
-                    view.innerHTML = "Requestnya timeout bro"
+                    display.textContent = "The request to get your location timed out.";
                     break;
                 case error.UNKNOWN_ERROR:
-                    view.innerHTML = "An unknown error occurred."
+                    display.textContent = "An unknown error occurred.";
                     break;
             }
         }
