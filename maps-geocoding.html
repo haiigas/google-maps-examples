@@ -1,85 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
     <title>Reverse Geocoding</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1UhV7s_4c-E3p33HyK_P-N7uEs8qqfpg&callback=initMap&libraries=&v=weekly" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        #map {
-            height: 100%;
-        }
-
-        html,
-        body {
+        html, body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
 
-        #floating-panel {
-            position: absolute;
-            top: 10px;
-            left: 25%;
-            z-index: 5;
-            background-color: #fff;
-            padding: 5px;
-            border: 1px solid #999;
-            text-align: center;
-            font-family: "Roboto", "sans-serif";
-            line-height: 30px;
-            padding-left: 10px;
+        #map {
+            height: 100%;
         }
 
         #floating-panel {
             position: absolute;
-            top: 5px;
+            top: 10px;
             left: 50%;
-            margin-left: -180px;
-            width: 350px;
+            transform: translateX(-50%);
             z-index: 5;
             background-color: #fff;
-            padding: 5px;
+            padding: 10px;
             border: 1px solid #999;
+            font-family: "Roboto", sans-serif;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         #latlng {
             width: 225px;
+            margin-right: 10px;
         }
     </style>
 </head>
-
 <body>
     <div id="floating-panel">
-        <input id="latlng" type="text" value="40.714224,-73.961452">
-        <input id="submit" type="button" value="Reverse Geocode">
+        <input id="latlng" type="text" value="40.714224,-73.961452" placeholder="Enter latitude,longitude" />
+        <input id="submit" type="button" value="Reverse Geocode" />
     </div>
     <div id="map"></div>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&callback=initMap&libraries=&v=weekly" defer></script>
+    
     <script>
         function initMap() {
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 8,
-                center: {
-                    lat: 40.731,
-                    lng: -73.997
-                },
+                center: { lat: 40.731, lng: -73.997 },
             });
+
             const geocoder = new google.maps.Geocoder();
-            const infowindow = new google.maps.InfoWindow();
+            const infoWindow = new google.maps.InfoWindow();
+
             document.getElementById("submit").addEventListener("click", () => {
-                geocodeLatLng(geocoder, map, infowindow);
+                geocodeLatLng(geocoder, map, infoWindow);
             });
         }
 
-        function geocodeLatLng(geocoder, map, infowindow) {
+        function geocodeLatLng(geocoder, map, infoWindow) {
             const input = document.getElementById("latlng").value;
-            const latlngStr = input.split(",", 2);
+            const latlngArr = input.split(",", 2);
             const latlng = {
-                lat: parseFloat(latlngStr[0]),
-                lng: parseFloat(latlngStr[1]),
+                lat: parseFloat(latlngArr[0]),
+                lng: parseFloat(latlngArr[1]),
             };
-            geocoder.geocode({
-                location: latlng
-            }, (results, status) => {
+
+            geocoder.geocode({ location: latlng }, (results, status) => {
                 if (status === "OK") {
                     if (results[0]) {
                         map.setZoom(11);
@@ -87,10 +75,10 @@
                             position: latlng,
                             map: map,
                         });
-                        infowindow.setContent(results[0].formatted_address);
-                        infowindow.open(map, marker);
+                        infoWindow.setContent(results[0].formatted_address);
+                        infoWindow.open(map, marker);
                     } else {
-                        window.alert("No results found");
+                        window.alert("No results found.");
                     }
                 } else {
                     window.alert("Geocoder failed due to: " + status);
@@ -98,6 +86,5 @@
             });
         }
     </script>
-
 </body>
 </html>
