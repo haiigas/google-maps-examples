@@ -1,22 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Teknowebapp - Maps Get Distance</title>
+    <meta charset="UTF-8">
+    <title>Distance Calculation - Google Maps API</title>
 </head>
 <body>
     <?php
-        $lat_origin = -7.2574719;
-        $lng_origin = 112.7520883;
+        $latOrigin = -7.2574719;
+        $lngOrigin = 112.7520883;
 
-        $lat_destination = -7.943795;
-        $lng_destination = 112.659256;
+        $latDestination = -7.943795;
+        $lngDestination = 112.659256;
 
-        $dataJson = file_get_contents("https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=".$lat_origin.",".$lng_origin."&destinations=".$lat_destination.",".$lng_destination."&key=AIzaSyA1UhV7s_4c-E3p33HyK_P-N7uEs8qqfpg");
+        $apiKey = "YOUR_KEY";
+        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric"
+             . "&origins={$latOrigin},{$lngOrigin}"
+             . "&destinations={$latDestination},{$lngDestination}"
+             . "&key={$apiKey}";
 
-        $data = json_decode($dataJson,true);
-        $distance = $data['rows'][0]['elements'][0]['distance']['text'];
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
 
-        echo "Jarak : ".$distance;
+        if (isset($data['rows'][0]['elements'][0]['distance']['text'])) {
+            $distance = $data['rows'][0]['elements'][0]['distance']['text'];
+            echo "<h3>Distance: {$distance}</h3>";
+        } else {
+            echo "<p>Error: Unable to retrieve distance data from Google Maps API.</p>";
+        }
     ?>
 </body>
 </html>
